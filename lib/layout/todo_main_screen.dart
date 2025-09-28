@@ -135,7 +135,6 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
           )
           .then((value) {
             print('$value inserted successfully');
-            print('$value inserted successfully');
           })
           .catchError((error) {
             print('Error inserting new record: ${error.toString()}');
