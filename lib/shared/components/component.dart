@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_1/models/task_card_model.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -49,4 +50,36 @@ Widget defaultInput({
   onTap: onTap,
   readOnly: readOnly,
   validator: validate,
+);
+
+Widget taskCard({required Map task}) => Padding(
+  padding: const EdgeInsets.all(20.0),
+  child: Row(
+    children: [
+      CircleAvatar(
+        radius: 30.0,
+        backgroundColor: Colors.blue,
+        child: Text(
+          task['time'],
+          style: TextStyle(color: Colors.white, fontSize: 15.0),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      SizedBox(width: 5.0),
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            task['title'],
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            task['date'],
+            style: TextStyle(fontSize: 16.0, color: Colors.grey),
+          ),
+        ],
+      ),
+    ],
+  ),
 );

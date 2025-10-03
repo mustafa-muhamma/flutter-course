@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_1/modules/todo/archived/archived_tasks_screen.dart';
 import 'package:flutter_1/modules/todo/done/done_tasks_screen.dart';
 import 'package:flutter_1/modules/todo/tasks/tasks_screen.dart';
 import 'package:flutter_1/shared/components/component.dart';
+import 'package:flutter_1/shared/components/constanse.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -34,6 +34,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
   var titleController = TextEditingController();
   var timeController = TextEditingController();
   var dateController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,9 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(title: Text(titles[currentIndex])),
-      body: screens[currentIndex],
+      body: tasks.isEmpty
+          ? Center(child: CircularProgressIndicator(color: Colors.blue))
+          : screens[currentIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (isButtomSheetShown) {
@@ -57,13 +60,17 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
                 date: dateController.text,
                 time: timeController.text,
               ).then((value) {
-                // after inserting we close the bottom sheet and clear the controllers
-                Navigator.pop(context);
-                setState(() {
-                  isButtomSheetShown = false;
-                  titleController.clear();
-                  dateController.clear();
-                  timeController.clear();
+                getData(database).then((value) {
+                  // after inserting we close the bottom sheet and clear the controllers
+                  Navigator.pop(context);
+                  setState(() {
+                    isButtomSheetShown = false;
+                    tasks = value;
+                    print(tasks);
+                    titleController.clear();
+                    dateController.clear();
+                    timeController.clear();
+                  });
                 });
               });
             }
@@ -215,6 +222,10 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
       // open the database
       onOpen: (db) {
         // called every time we run the app
+        getData(db).then((value) {
+          tasks = value;
+          print(tasks);
+        });
         print("Database Opened");
       },
     );
@@ -239,5 +250,9 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
             print("Error when inserting record: ${error.toString()}");
           });
     });
+  }
+
+  Future<List<Map>> getData(Database database) async {
+    return await database.rawQuery('SELECT * FROM Tasks');
   }
 }
