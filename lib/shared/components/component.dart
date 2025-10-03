@@ -23,6 +23,7 @@ Widget defaultButton({
 
 Widget defaultInput({
   bool isPassword = false,
+  bool readOnly = false,
   required TextEditingController controller,
   required TextInputType type,
   required String text,
@@ -31,6 +32,7 @@ Widget defaultInput({
 
   ValueChanged<String>? onSubmit,
   ValueChanged<String>? onChanged,
+  VoidCallback? onTap,
   Widget? suffix,
 }) => TextFormField(
   controller: controller,
@@ -39,11 +41,12 @@ Widget defaultInput({
   decoration: InputDecoration(
     prefixIcon: prefix,
     suffixIcon: suffix,
-
     labelText: text,
     border: OutlineInputBorder(),
   ),
   onFieldSubmitted: onSubmit,
   onChanged: onChanged,
+  onTap: onTap,
+  readOnly: readOnly,
   validator: validate,
 );
